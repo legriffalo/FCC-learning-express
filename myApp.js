@@ -1,5 +1,6 @@
 let express = require("express");
 require("dotenv").config();
+let bodyParser = require("body-parser");
 
 let app = express();
 
@@ -45,7 +46,22 @@ const mware = (req, res, next) => {
   next();
 };
 
+// handle the get name request
+const getNameHandler = (req, res) => {
+  const first = req.query.first;
+  const last = req.query.last;
+  const fullName = `${first} ${last}`;
+  res.json({ name: fullName });
+};
+
+// handle post name
+const postNameHandler = (req, res) => {
+  var string = req.body.first + " " + req.body.last;
+  res.json({ name: string });
+};
+
 // middle ware has to be added using a method of the app
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use("/public", static);
 app.use(mware);
 app.get(
@@ -69,3 +85,6 @@ app.get("/:word/echo", (req, res) => {
 app.get("/", getPageHandler);
 // create a route to request a json object
 app.get("/json", getJsonHandler);
+
+// manage multiple end points to api more easily
+app.route("/name").get(getNameHandler).post(postNameHandler);
