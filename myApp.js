@@ -4,7 +4,6 @@ require("dotenv").config();
 let app = express();
 
 module.exports = app;
-
 console.log("Hello World");
 const uppernator = (obj) => {
   return {
@@ -20,7 +19,7 @@ const uppernator = (obj) => {
 
 // respond to get with string
 function getHandler(req, res) {
-  res.send("test string");
+  res.send("Hello Express");
 }
 
 // serve a page in response to get
@@ -49,14 +48,14 @@ const mware = (req, res, next) => {
 // middle ware has to be added using a method of the app
 app.use("/public", static);
 app.use(mware);
-app.use(
+app.get(
   "/now",
   function (req, res, next) {
     req.time = { time: new Date().toString() };
     console.log(req.time);
     next();
   },
-  (req, res) => {
+  function (req, res) {
     res.send(req.time);
   }
 );
